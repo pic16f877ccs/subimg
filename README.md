@@ -31,28 +31,22 @@ subimg imageInImage.png --save-invisible=invisibleImage.jpeg'
 ### Example:
 
 #### Input image with alpha channel and jpeg type subimage.
-<p align="center">
-    <img title="Image with alpha channel" src="md_img/gastropoda.png" alt="" width="325" height="" hspae="10"> 
-    <img title="Additional image" src="md_img/picus.jpeg" alt="" width="325" height="">
-</p>
+|<img title="Image with alpha channel" src="md_img/gastropoda.png" alt="" width="325" height="">| <br> <img title="Additional image" src="md_img/picus.jpeg" alt="" width="325" height=""></br>|
+|:-:|:-:|
 
+#### Makes part of the image invisible.
 ```console
 subimg gastropoda.png --be-hidden=picus.jpeg --save=gastropoda_picus.png
 ```
-
-#### Image in image ( sub image invisible ).
-
-<img title="Image in image" src="md_img/gastropoda_picus.png" alt="" width="325" height="">
+|<img title="Image in image" src="md_img/gastropoda_picus.png" alt="" width="325" height="">|
+|:-:|
 
 #### Save invisible image.
-
 ```console
 subimg gastropoda_picus.png --save-invisible=picus.png
 ```
-<p align="center">
-    <img title="Input image" src="md_img/gastropoda_picus.png" alt="image" width="325" height="" hspace="10"> 
-    <img title="Otput subimage" src="md_img/picus.png" alt="image" width="325" height="">
-</p>
+|<img title="Input image" src="md_img/gastropoda_picus.png" alt="image" width="325" height="">|<br> <img title="Otput subimage" src="md_img/picus.png" alt="image" width="325" height=""></br>|
+|:-:|:-:|
 
 ## License
 
