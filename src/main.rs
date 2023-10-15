@@ -135,7 +135,7 @@ impl ImgInImg {
 
     fn add_sub_img_data(&mut self, path: &PathBuf) -> Result<()> {
         let sub_img = open_sub_img(path)?;
-        let sub_img_size = endcode_sub_img_size(&sub_img);
+        let sub_img_size = encode_sub_img_size(&sub_img);
         let sub_img_data = sub_img.into_rgba8().into_vec();
         let mut tmp_data = Cev::from_vec(sub_img_data);
         tmp_data.append(&mut Cev::from(sub_img_size));
@@ -207,13 +207,13 @@ fn open_sub_img(path: &PathBuf) -> ImageResult<DynamicImage> {
     open(path)
 }
 
-fn endcode_sub_img_size(sub_img: &DynamicImage) -> Vec<u8> {
-    let mut endcoded_size = Vec::from(sub_img.width().to_ne_bytes());
-    endcoded_size.insert(3, 0);
-    endcoded_size.append(&mut Vec::from(sub_img.height().to_ne_bytes()));
-    endcoded_size.insert(7, 0);
-    endcoded_size.append(&mut vec![0, 0]);
-    endcoded_size
+fn encode_sub_img_size(sub_img: &DynamicImage) -> Vec<u8> {
+    let mut size = Vec::from(sub_img.width().to_ne_bytes());
+    size.insert(3, 0);
+    size.append(&mut Vec::from(sub_img.height().to_ne_bytes()));
+    size.insert(7, 0);
+    size.append(&mut vec![0, 0]);
+    size
 }
 
 fn img_to_invisible(img_data: &mut [u8]) {
