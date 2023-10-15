@@ -251,7 +251,7 @@ fn app_commands() -> ArgMatches {
         .long_version(crate_version!())
         .author("    by PIC16F877ccs")
         .args_override_self(true)
-        .arg(
+    .arg(
             Arg::new("img")
                 .value_parser(value_parser!(PathBuf))
                 .index(1)
@@ -288,6 +288,7 @@ fn app_commands() -> ArgMatches {
         .arg(
             Arg::new("save-invisible")
                 .short('i')
+                .conflicts_with_all(["save", "sub-img"] )
                 .long("save-invisible")
                 .value_name("IMAGE")
                 .help("Saves the invisible image")
