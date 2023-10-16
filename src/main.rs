@@ -246,7 +246,7 @@ fn main() -> Result<()> {
 }
 
 fn app_commands() -> ArgMatches {
-    Command::new("himg")
+    Command::new("subimg")
         .about("A tool to hide sub-images in the image")
         .long_version(crate_version!())
         .author("    by PIC16F877ccs")
