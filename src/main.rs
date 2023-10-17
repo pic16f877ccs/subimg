@@ -22,9 +22,9 @@ impl ImgInImg {
         ImgInImg::default()
     }
 
-    fn open_img(&mut self, app: &ArgMatches) -> ImageResult<()> {
+    fn open_image(&mut self, app: &ArgMatches) -> ImageResult<()> {
         let path = app
-            .get_one::<PathBuf>("img")
+            .get_one::<PathBuf>("image")
             .map(|path| path.to_path_buf())
             .expect("internal error opening file");
         let img = open(path)?;
@@ -120,7 +120,7 @@ impl ImgInImg {
         Ok(())
     }
 
-    fn img_available_pixels(&self) -> Option<usize> {
+    fn available_pixels(&self) -> Option<usize> {
         let Some(_) = self.img_alpha else {
             return None;
         };
@@ -157,7 +157,7 @@ impl ImgInImg {
 
     fn save_img_in_img(&mut self, app: &ArgMatches) -> Result<()> {
         if let Some(path) = app
-            .get_one::<PathBuf>("sub-img")
+            .get_one::<PathBuf>("input_subimg")
             .map(|path| path.to_path_buf())
         {
             let Some(_) = self.img_alpha else {
@@ -169,7 +169,7 @@ impl ImgInImg {
     }
 
     fn save_sub_img(&self, app: &ArgMatches) -> Result<()> {
-        if let Some(path) = app.get_one::<PathBuf>("save-invisible") {
+        if let Some(path) = app.get_one::<PathBuf>("output_subimg") {
             let Some(ref img) = self.sub_img_data else {
                 return Err("subimage decoding error".into());
             };
@@ -181,10 +181,10 @@ impl ImgInImg {
     }
 
     fn save_img(&self, app: &ArgMatches) -> Result<()> {
-        if let Some(path) = app.get_one::<PathBuf>("save") {
+        if let Some(path) = app.get_one::<PathBuf>("output") {
             let color_type = ColorType::Rgba8;
             let format = ImageFormat::from_path(path)?;
-            if app.contains_id("sub-img") {
+            if app.contains_id("input_subimg") {
                 let (ImageFormat::Png | ImageFormat::Tiff) = format else {
                     return Err(
                         "Unsupported image output format. Try `tiff` or `png` format.".into(),
@@ -225,9 +225,9 @@ fn img_to_invisible(img_data: &mut [u8]) {
 fn main() -> Result<()> {
     let app = app_commands();
     let mut img_in_img = ImgInImg::new();
-    img_in_img.open_img(&app)?;
-    if app.get_flag("available-pixels") {
-        if let Some(pixels) = img_in_img.img_available_pixels() {
+    img_in_img.open_image(&app)?;
+    if app.get_flag("pixels") {
+        if let Some(pixels) = img_in_img.available_pixels() {
             return Ok(println!(
                 "\n {} megapixels available in the image",
                 pixels / 1_000_000
@@ -238,7 +238,7 @@ fn main() -> Result<()> {
     }
     img_in_img.save_sub_img(&app)?;
     img_in_img.save_img_in_img(&app)?;
-    if app.get_flag("all-visible") {
+    if app.get_flag("all") {
         img_in_img.alpha_ch_max();
     }
     img_in_img.save_img(&app)?;
@@ -252,56 +252,58 @@ fn app_commands() -> ArgMatches {
         .author("    by PIC16F877ccs")
         .args_override_self(true)
     .arg(
-            Arg::new("img")
+            Arg::new("image")
                 .value_parser(value_parser!(PathBuf))
+                .value_name("PAPH")
+                .help("Path to input image file")
                 .index(1)
                 .required(true),
         )
         .arg(
-            Arg::new("available-pixels")
+            Arg::new("pixels")
                 .short('p')
-                .long("available-pixels")
+                .long("pixels")
                 .action(clap::ArgAction::SetTrue)
                 .num_args(0)
                 .help("Available pixels in image")
                 .required(false),
         )
         .arg(
-            Arg::new("sub-img")
-                .short('b')
-                .long("be-hidden")
-                .value_name("IMAGE")
-                .help("The image that will be hidden")
+            Arg::new("input_subimg")
+                .short('i')
+                .long("input-subimage")
+                .value_name("PAPH")
+                .help("Path to sub image file")
                 .value_parser(value_parser!(PathBuf))
                 .num_args(1)
                 .required(false),
         )
         .arg(
-            Arg::new("all-visible")
+            Arg::new("all")
                 .short('a')
-                .long("all-visible")
+                .long("all")
                 .action(clap::ArgAction::SetTrue)
                 .num_args(0)
-                .help("Display all rgb pixels")
+                .help("All pixels are visible")
                 .required(false),
         )
         .arg(
-            Arg::new("save-invisible")
-                .short('i')
-                .conflicts_with_all(["save", "sub-img"] )
-                .long("save-invisible")
-                .value_name("IMAGE")
-                .help("Saves the invisible image")
+            Arg::new("output_subimg")
+                .short('O')
+                .conflicts_with_all(["output", "input_subimg"] )
+                .long("output-subimage")
+                .value_name("PAPH")
+                .help("Output sub image file")
                 .value_parser(value_parser!(PathBuf))
                 .num_args(1)
                 .required(false),
         )
         .arg(
-            Arg::new("save")
-                .short('s')
-                .long("save")
-                .value_name("IMAGE")
-                .help("Saves the image")
+            Arg::new("output")
+                .short('o')
+                .long("output")
+                .value_name("PAPH")
+                .help("Output image file")
                 .value_parser(value_parser!(PathBuf))
                 .num_args(1)
                 .required(false),
