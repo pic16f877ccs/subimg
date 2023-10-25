@@ -157,7 +157,7 @@ impl ImgInImg {
 
     fn save_img_in_img(&mut self, app: &ArgMatches) -> Result<()> {
         if let Some(path) = app
-            .get_one::<PathBuf>("input_subimg")
+            .get_one::<PathBuf>("input")
             .map(|path| path.to_path_buf())
         {
             let Some(_) = self.img_alpha else {
@@ -184,7 +184,7 @@ impl ImgInImg {
         if let Some(path) = app.get_one::<PathBuf>("output") {
             let color_type = ColorType::Rgba8;
             let format = ImageFormat::from_path(path)?;
-            if app.contains_id("input_subimg") {
+            if app.contains_id("input") {
                 let (ImageFormat::Png | ImageFormat::Tiff) = format else {
                     return Err(
                         "Unsupported image output format. Try `tiff` or `png` format.".into(),
@@ -269,9 +269,9 @@ fn app_commands() -> ArgMatches {
                 .required(false),
         )
         .arg(
-            Arg::new("input_subimg")
+            Arg::new("input")
                 .short('i')
-                .long("input-subimage")
+                .long("input")
                 .value_name("PAPH")
                 .help("Path to sub image file")
                 .value_parser(value_parser!(PathBuf))
@@ -290,7 +290,7 @@ fn app_commands() -> ArgMatches {
         .arg(
             Arg::new("output_subimg")
                 .short('O')
-                .conflicts_with_all(["output", "input_subimg"] )
+                .conflicts_with_all(["output", "input"] )
                 .long("output-subimage")
                 .value_name("PAPH")
                 .help("Output sub image file")
