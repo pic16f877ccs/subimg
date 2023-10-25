@@ -122,10 +122,15 @@ impl ImgInImg {
 
     fn available_pixels(&self, app: &ArgMatches) {
         if app.get_flag("pixels") {
-            if let Some(_) = self.img_alpha {
-                let pixels = self.img_data .chunks(4) .filter(|chunk| chunk[3] == 0).count() / 1_000_000;
+            if self.img_alpha.is_some() {
+                let pixels = self
+                    .img_data
+                    .chunks(4)
+                    .filter(|chunk| chunk[3] == 0)
+                    .count()
+                    / 1_000_000;
 
-                println!( "\n {} megapixels available in the image", pixels);
+                println!("\n {} megapixels available in the image", pixels);
             } else {
                 println!("\n there are no available pixels in the image");
             }
@@ -144,14 +149,16 @@ impl ImgInImg {
         Ok(())
     }
 
-    fn alpha_ch_max(&mut self) {
-        self.img_data
-            .iter_mut()
-            .skip(3)
-            .step_by(4)
-            .for_each(|alpha| {
-                *alpha = 255;
-            });
+    fn all_alpha_max(&mut self, app: &ArgMatches) {
+        if app.get_flag("all") {
+            self.img_data
+                .iter_mut()
+                .skip(3)
+                .step_by(4)
+                .for_each(|alpha| {
+                    *alpha = 255;
+                });
+        }
     }
 
     fn save_img_in_img(&mut self, app: &ArgMatches) -> Result<()> {
@@ -228,9 +235,7 @@ fn main() -> Result<()> {
     img_in_img.available_pixels(&app);
     img_in_img.save_sub_img(&app)?;
     img_in_img.save_img_in_img(&app)?;
-    if app.get_flag("all") {
-        img_in_img.alpha_ch_max();
-    }
+    img_in_img.all_alpha_max(&app);
     img_in_img.save_img(&app)?;
     Ok(())
 }
@@ -241,7 +246,7 @@ fn app_commands() -> ArgMatches {
         .long_version(crate_version!())
         .author("    by PIC16F877ccs")
         .args_override_self(true)
-    .arg(
+        .arg(
             Arg::new("image")
                 .value_parser(value_parser!(PathBuf))
                 .value_name("PAPH")
@@ -280,7 +285,7 @@ fn app_commands() -> ArgMatches {
         .arg(
             Arg::new("output_subimg")
                 .short('O')
-                .conflicts_with_all(["output", "input"] )
+                .conflicts_with_all(["output", "input"])
                 .long("output-subimage")
                 .value_name("PAPH")
                 .help("Output sub image file")
