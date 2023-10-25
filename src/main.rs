@@ -120,17 +120,16 @@ impl ImgInImg {
         Ok(())
     }
 
-    fn available_pixels(&self) -> Option<usize> {
-        let Some(_) = self.img_alpha else {
-            return None;
-        };
+    fn available_pixels(&self, app: &ArgMatches) {
+        if app.get_flag("pixels") {
+            if let Some(_) = self.img_alpha {
+                let pixels = self.img_data .chunks(4) .filter(|chunk| chunk[3] == 0).count() / 1_000_000;
 
-        Some(
-            self.img_data
-                .chunks(4)
-                .filter(|chunk| chunk[3] == 0)
-                .count(),
-        )
+                println!( "\n {} megapixels available in the image", pixels);
+            } else {
+                println!("\n there are no available pixels in the image");
+            }
+        }
     }
 
     fn add_sub_img_data(&mut self, path: &PathBuf) -> Result<()> {
@@ -226,16 +225,7 @@ fn main() -> Result<()> {
     let app = app_commands();
     let mut img_in_img = ImgInImg::new();
     img_in_img.open_image(&app)?;
-    if app.get_flag("pixels") {
-        if let Some(pixels) = img_in_img.available_pixels() {
-            return Ok(println!(
-                "\n {} megapixels available in the image",
-                pixels / 1_000_000
-            ));
-        } else {
-            return Ok(println!("\n there are no available pixels in the image"));
-        }
-    }
+    img_in_img.available_pixels(&app);
     img_in_img.save_sub_img(&app)?;
     img_in_img.save_img_in_img(&app)?;
     if app.get_flag("all") {
