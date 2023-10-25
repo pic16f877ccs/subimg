@@ -285,7 +285,7 @@ fn app_commands() -> ArgMatches {
         .arg(
             Arg::new("output_subimg")
                 .short('O')
-                .conflicts_with_all(["output", "input"])
+                .conflicts_with_all(["output", "input", "all"])
                 .long("output-subimage")
                 .value_name("PAPH")
                 .help("Output sub image file")
