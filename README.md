@@ -1,6 +1,6 @@
 ## subimg
 
-A tool to hide sub-images in the image.
+A tool to hide another image in an image.
 
 ## Description
 
@@ -16,34 +16,34 @@ cargo b -r
 
 ### Usage:
 
-#### Be hiddes image in image.
+#### Hides the image within the image.
 
 ```console
-subimg inputImage.png --be-hidden=subImage.jpeg --save=outputImage.png
+subimg inputImage.png --input=subImage.jpeg --output=outputImage.png
 ```
 
-#### Save invisible image.
+#### Saving an invisible image.
 
 ```console
-subimg imageInImage.png --save-invisible=invisibleImage.jpeg'
+subimg imageInImage.png --output-subimage=outputSubImage.jpeg
 ```
 
 ### Example:
 
-#### Input image with alpha channel and jpeg type subimage.
+#### Input image type PNG with transparent region and JPEG image file.
 |<img title="Image with alpha channel" src="md_img/gastropoda.png" alt="" width="325" height="">| <br> <img title="Additional image" src="md_img/picus.jpeg" alt="" width="325" height=""></br>|
 |:-:|:-:|
 
-#### Makes part of the image invisible.
+#### Makes the additional input image invisible.
 ```console
-subimg gastropoda.png --be-hidden=picus.jpeg --save=gastropoda_picus.png
+subimg gastropoda.png -i picus.jpeg -o gastropoda_picus.png
 ```
 |<img title="Image in image" src="md_img/gastropoda_picus.png" alt="" width="325" height="">|
 |:-:|
 
-#### Save invisible image.
+#### Extracts invisible image.
 ```console
-subimg gastropoda_picus.png --save-invisible=picus.png
+subimg gastropoda_picus.png -O picus.png
 ```
 |<img title="Input image" src="md_img/gastropoda_picus.png" alt="image" width="325" height="">|<br> <img title="Otput subimage" src="md_img/picus.png" alt="image" width="325" height=""></br>|
 |:-:|:-:|
