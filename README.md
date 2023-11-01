@@ -8,10 +8,10 @@ Writes pixels to a transparent area of an image from another image, leaving the 
 
 ### Build
 
-Build with Rust package manager.
+Build install with Rust package manager.
 
 ```console
-cargo b -r
+cargo install subimg
 ```
 
 ### Usage:
