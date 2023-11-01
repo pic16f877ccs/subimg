@@ -43,9 +43,9 @@ subimg gastropoda.png -i picus.jpeg -o gastropoda_picus.png
 
 #### Extracts invisible image.
 ```console
-subimg gastropoda_picus.png -O picus.gif
+subimg gastropoda_picus.png -O picus.jpeg
 ```
-|<img title="Input image" src="md_img/gastropoda_picus.png" alt="image" width="325" height="">|<br> <img title="Otput subimage" src="md_img/picus.gif" alt="image" width="325" height=""></br>|
+|<img title="Input image" src="md_img/gastropoda_picus.png" alt="image" width="325" height="">|<br> <img title="Otput subimage" src="md_img/picus.jpeg" alt="image" width="325" height=""></br>|
 |:-:|:-:|
 
 ## License
